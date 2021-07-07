@@ -53,6 +53,11 @@ while(1):
         if w < 150 or h < 150:
             continue
 
+        min_rect = cv2.minAreaRect(contour)
+        box = cv2.boxPoints(min_rect)
+        outline = np.int0(box)
+        
+        cv2.drawContours(result, [outline], 0, (0, 0, 255), 3)
         cv2.drawContours(result, [contour], 0, (0, 255, 0), 3)
         cv2.rectangle(result, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
