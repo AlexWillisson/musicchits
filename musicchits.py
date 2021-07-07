@@ -11,7 +11,7 @@ while(1):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
      
     # Threshold of blue in HSV space
-    lower_green = np.array([50, 30, 30])
+    lower_green = np.array([40, 20, 30])
     upper_green = np.array([70, 150, 200])
  
     # preparing the mask to overlay
