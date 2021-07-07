@@ -19,8 +19,8 @@ while(1):
         },
 
         "purple": {
-            "lower": 157,
-            "upper": 165
+            "lower": 150,
+            "upper": 170
         }
     }
 
@@ -53,7 +53,8 @@ while(1):
         if w < 150 or h < 150:
             continue
 
-        cv2.rectangle(result, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.drawContours(result, [contour], 0, (0, 255, 0), 3)
+        cv2.rectangle(result, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
     cv2.imshow('frame', frame)
     cv2.imshow('result', result)
