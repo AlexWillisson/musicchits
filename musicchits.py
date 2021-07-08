@@ -45,24 +45,40 @@ while(1):
     combined_masks = cv2.bitwise_or(masks[0], masks[1])
 
     result = cv2.bitwise_and(frame, frame, mask = combined_masks)
+    warped = frame[:]
  
     contours, hierarchy = cv2.findContours(combined_masks, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     for contour in contours:
         (x, y, w, h) = cv2.boundingRect(contour)
 
-        if w < 150 or h < 150:
-            continue
-
         min_rect = cv2.minAreaRect(contour)
         box = cv2.boxPoints(min_rect)
         outline = np.int0(box)
         
+        width = int(min_rect[1][0])
+        height = int(min_rect[1][1])
+
+        if width < 150 or height < 150:
+            continue
+
+        src_pts = box.astype("float32")
+        dst_pts = np.array([[0, height - 1],
+                            [0, 0],
+                            [width - 1, 0],
+                            [width - 1, height - 1]], dtype="float32")
+
+        transform = cv2.getPerspectiveTransform(src_pts, dst_pts)
+
+        roi = frame[y:y+h, x:x+w]
+        warped = cv2.warpPerspective(frame, transform, (width, height))
+
         cv2.drawContours(result, [outline], 0, (0, 0, 255), 3)
         cv2.drawContours(result, [contour], 0, (0, 255, 0), 3)
         cv2.rectangle(result, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
     cv2.imshow('frame', frame)
     cv2.imshow('result', result)
+    cv2.imshow('warped', warped)
      
     if cv2.waitKey(15) & 0xff == ord('q'):
         break
